@@ -21,7 +21,6 @@
 		6CC262C7E0B6E239CDCA23AE /* libPods-facebook-live-ios-sample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-facebook-live-ios-sample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF45F806C5E2FD408C4D0C85 /* Pods-facebook-live-ios-sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-facebook-live-ios-sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-facebook-live-ios-sample/Pods-facebook-live-ios-sample.release.xcconfig"; sourceTree = "<group>"; };
 		DB40E22F1E71567E009E7C74 /* FBSDKLiveStreamService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSDKLiveStreamService.swift; sourceTree = "<group>"; };
-		DB8867B91E705956001FBCAC /* facebook-live-ios-sample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "facebook-live-ios-sample-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		DB9C406A1E70527D00CCBD83 /* facebook-live-ios-sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "facebook-live-ios-sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9C406D1E70527D00CCBD83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DB9C406F1E70527D00CCBD83 /* HKLiveStreamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKLiveStreamViewController.swift; sourceTree = "<group>"; };
@@ -30,6 +29,7 @@
 		DB9C40771E70527D00CCBD83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DB9C40791E70527D00CCBD83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB9C407F1E70559F00CCBD83 /* facebook-live-ios-sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "facebook-live-ios-sample.entitlements"; sourceTree = "<group>"; };
+		DBA01A2D1E71CAD80005A439 /* facebook-live-ios-sample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "facebook-live-ios-sample-Bridging-Header.h"; sourceTree = "<group>"; };
 		DBBBFCFB1E7166E100CD90AC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		DBBBFCFC1E7166E100CD90AC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,8 +96,8 @@
 				DB9C40711E70527D00CCBD83 /* Main.storyboard */,
 				DB9C40761E70527D00CCBD83 /* LaunchScreen.storyboard */,
 				DB9C40791E70527D00CCBD83 /* Info.plist */,
+				DBA01A2D1E71CAD80005A439 /* facebook-live-ios-sample-Bridging-Header.h */,
 				DB9C407F1E70559F00CCBD83 /* facebook-live-ios-sample.entitlements */,
-				DB8867B91E705956001FBCAC /* facebook-live-ios-sample-Bridging-Header.h */,
 				DB9C40741E70527D00CCBD83 /* Assets.xcassets */,
 			);
 			name = Resources;
@@ -380,9 +380,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "de.hansknoechel.facebook-live-ios-sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "facebook-live-ios-sample-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "facebook-live-ios-sample/facebook-live-ios-sample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -398,8 +399,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "de.hansknoechel.facebook-live-ios-sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "facebook-live-ios-sample-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "facebook-live-ios-sample/facebook-live-ios-sample-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
