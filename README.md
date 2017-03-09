@@ -1,6 +1,8 @@
 # <img src="./assets/facebook-live-logo.png" width="30" alt="" />&nbsp;Facebook Live iOS
 A custom Swift utility "FBSDKLiveVideo" to stream Facebook Live videos on iOS.
 
+<img alt="App Store" src="./assets/sample-app-preview.png" width="900" />
+
 ## Example
 The following example would create a full-screen live video preview that is started when the user taps
 the trigger button linked in your Storyboard.
