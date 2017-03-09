@@ -9,13 +9,11 @@
 /* Begin PBXBuildFile section */
 		5FE188D17C98FB19DB2EBDEA /* libPods-facebook-live-ios-sample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CC262C7E0B6E239CDCA23AE /* libPods-facebook-live-ios-sample.a */; };
 		DB40E2301E71567E009E7C74 /* FBSDKLiveStreamService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB40E22F1E71567E009E7C74 /* FBSDKLiveStreamService.swift */; };
-		DB8867BD1E70618D001FBCAC /* HKVideoPreviewLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8867BC1E70618D001FBCAC /* HKVideoPreviewLayer.swift */; };
 		DB9C406E1E70527D00CCBD83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C406D1E70527D00CCBD83 /* AppDelegate.swift */; };
 		DB9C40701E70527D00CCBD83 /* HKLiveStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C406F1E70527D00CCBD83 /* HKLiveStreamViewController.swift */; };
 		DB9C40731E70527D00CCBD83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB9C40711E70527D00CCBD83 /* Main.storyboard */; };
 		DB9C40751E70527D00CCBD83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB9C40741E70527D00CCBD83 /* Assets.xcassets */; };
 		DB9C40781E70527D00CCBD83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB9C40761E70527D00CCBD83 /* LaunchScreen.storyboard */; };
-		DBBBFCFA1E7162DA00CD90AC /* HKLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBBFCF91E7162DA00CD90AC /* HKLoginButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +22,6 @@
 		BF45F806C5E2FD408C4D0C85 /* Pods-facebook-live-ios-sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-facebook-live-ios-sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-facebook-live-ios-sample/Pods-facebook-live-ios-sample.release.xcconfig"; sourceTree = "<group>"; };
 		DB40E22F1E71567E009E7C74 /* FBSDKLiveStreamService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSDKLiveStreamService.swift; sourceTree = "<group>"; };
 		DB8867B91E705956001FBCAC /* facebook-live-ios-sample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "facebook-live-ios-sample-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		DB8867BC1E70618D001FBCAC /* HKVideoPreviewLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HKVideoPreviewLayer.swift; sourceTree = "<group>"; };
 		DB9C406A1E70527D00CCBD83 /* facebook-live-ios-sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "facebook-live-ios-sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9C406D1E70527D00CCBD83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DB9C406F1E70527D00CCBD83 /* HKLiveStreamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKLiveStreamViewController.swift; sourceTree = "<group>"; };
@@ -33,7 +30,6 @@
 		DB9C40771E70527D00CCBD83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DB9C40791E70527D00CCBD83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB9C407F1E70559F00CCBD83 /* facebook-live-ios-sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "facebook-live-ios-sample.entitlements"; sourceTree = "<group>"; };
-		DBBBFCF91E7162DA00CD90AC /* HKLoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HKLoginButton.swift; sourceTree = "<group>"; };
 		DBBBFCFB1E7166E100CD90AC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		DBBBFCFC1E7166E100CD90AC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,8 +107,6 @@
 			isa = PBXGroup;
 			children = (
 				DB9C406D1E70527D00CCBD83 /* AppDelegate.swift */,
-				DBBBFCF91E7162DA00CD90AC /* HKLoginButton.swift */,
-				DB8867BC1E70618D001FBCAC /* HKVideoPreviewLayer.swift */,
 				DB9C406F1E70527D00CCBD83 /* HKLiveStreamViewController.swift */,
 				DB40E22F1E71567E009E7C74 /* FBSDKLiveStreamService.swift */,
 			);
@@ -250,9 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB9C40701E70527D00CCBD83 /* HKLiveStreamViewController.swift in Sources */,
-				DB8867BD1E70618D001FBCAC /* HKVideoPreviewLayer.swift in Sources */,
 				DB40E2301E71567E009E7C74 /* FBSDKLiveStreamService.swift in Sources */,
-				DBBBFCFA1E7162DA00CD90AC /* HKLoginButton.swift in Sources */,
 				DB9C406E1E70527D00CCBD83 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

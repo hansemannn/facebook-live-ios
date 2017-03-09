@@ -9,43 +9,50 @@
 import UIKit
 
 class HKLiveStreamViewController: UIViewController {
-        
-    var previewLayer: HKVideoPreviewLayer!
-    
+            
     var blurOverlay: UIVisualEffectView!
 
     var sessionURL: NSURL!
     
-    var loginButton: HKLoginButton!
+    var loader: UIActivityIndicatorView!
+    
+    var loginButton: FBSDKLoginButton!
     
     var liveVideo: FBSDKLiveVideoService!
     
     @IBOutlet weak var recordButton: UIButton!
     
     @IBAction func recordButtonTapped() {
-        startStreaming()
+        if !self.liveVideo.isStreaming {
+            startStreaming()
+        } else {
+            stopStreaming()
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.liveVideo = FBSDKLiveVideoService(delegate: self, size: self.view.bounds.size)
+        self.liveVideo = FBSDKLiveVideoService(delegate: self, frameSize: self.view.bounds, videoSize: CGSize(width: 1280, height: 720))
         self.liveVideo.privacy = .me
+        self.liveVideo.audience = "me" // or your user-id, page-id, event-id, group-id, ...
         
         initializeUserInterface()
     }
     
     func initializeUserInterface() {
+        self.loader = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        self.loader.frame = CGRect(x: 15, y: 15, width: 40, height: 40)
+        
         self.blurOverlay = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         self.blurOverlay.frame = self.view.bounds
         
-        self.previewLayer = HKVideoPreviewLayer()
-        self.previewLayer.frame = self.view.bounds
-        self.previewLayer.isVisible = true
-        self.view.layer.insertSublayer(self.previewLayer, at: 0)
+        self.view.insertSubview(self.liveVideo.preview, at: 0)
 
-        self.loginButton = HKLoginButton()
-        self.loginButton.initializeProperties(center: CGPoint(x: self.view.bounds.size.width / 2, y: 60))
+        self.loginButton = FBSDKLoginButton()
+        self.loginButton.publishPermissions = ["publish_actions"]
+        self.loginButton.loginBehavior = .native
+        self.loginButton.center = CGPoint(x: self.view.bounds.size.width / 2, y: 60)
         self.loginButton.delegate = self
         self.view.addSubview(self.loginButton)
 
@@ -58,28 +65,33 @@ class HKLiveStreamViewController: UIViewController {
     
     func startStreaming() {
         self.liveVideo.start()
+
+        self.loader.startAnimating()
+        self.recordButton.addSubview(self.loader)
+        self.recordButton.isEnabled = false
     }
     
     func stopStreaming() {
         self.liveVideo.stop()
-    }
-    
-    func hidePreviewLayer() {
-        self.previewLayer.removeFromSuperlayer()
-        self.blurOverlay.removeFromSuperview()
-        
-        self.previewLayer.isVisible = true
     }
 }
 
 extension HKLiveStreamViewController : FBSDKLiveStreamDelegate {
     
     func liveStream(didStartWithSession session: VCSimpleSession) {
-        
+        self.loader.stopAnimating()
+        self.loader.removeFromSuperview()
+        self.recordButton.isEnabled = true
+       
+        self.recordButton.imageView?.image = UIImage(named: "stop-button")
     }
     
     func liveStream(didStopWithSession session: VCSimpleSession) {
-        
+        self.recordButton.imageView?.image = UIImage(named: "record-button")
+    }
+    
+    func liveStream(didAbortWithError error: Error) {
+        self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
 }
 

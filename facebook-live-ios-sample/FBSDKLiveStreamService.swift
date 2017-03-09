@@ -8,6 +8,8 @@
 
 import UIKit
 
+// MARK: Delegates
+
 public protocol FBSDKLiveStreamDelegate {
     func liveStream(didStartWithSession session: VCSimpleSession);
     func liveStream(didStopWithSession session: VCSimpleSession);
@@ -18,6 +20,8 @@ extension FBSDKLiveStreamDelegate {
     func liveStream(didChangeSessionState sessionState: VCSessionState) {}
     func liveStream(didAddCameraSource cameraSource: VCSimpleSession) {}
 }
+
+// MARK: Enumerations
 
 enum FBSDKLiveStreamPrivacy : StringLiteralType {
     
@@ -30,7 +34,6 @@ enum FBSDKLiveStreamPrivacy : StringLiteralType {
     case allFriends = "ALL_FRIENDS"
     
     case custom = "CUSTOM"
-
 }
 
 enum FBSDKLiveStreamStatus: StringLiteralType {
@@ -66,41 +69,65 @@ open class FBSDKLiveVideoService: NSObject {
     var type: FBSDKLiveStreamType!
     
     var title: String!
+    
+    var preview: UIView!
+    
+    var audience: String!
+
+    var url: URL!
 
     var id: String!
+    
+    var frameRate: Int?
+    
+    var bitRate: Int?
+    
+    var isStreaming: Bool!
 
     private var session: VCSimpleSession!
     
-    private var sessionURL: NSURL!
-    
-    required public init(delegate: FBSDKLiveStreamDelegate, size: CGSize) {
+    required public init(delegate: FBSDKLiveStreamDelegate, frameSize: CGRect, videoSize: CGSize) {
         
         super.init()
         
         self.delegate = delegate
         self.type = .regular
         self.privacy = .me
+        self.audience = "me"
+        self.frameRate = 30
+        self.bitRate = 1000000
+        self.isStreaming = false
         
-        // self.session = VCSimpleSession(videoSize: size, frameRate: 30, bitrate: 1000000, useInterfaceOrientation: false)
-        // self.session.delegate = self
+        self.session = VCSimpleSession(videoSize: videoSize, frameRate: Int32(self.frameRate!), bitrate: Int32(self.bitRate!), useInterfaceOrientation: false)
+        self.session.previewView.frame = frameSize
+        self.session.delegate = self
+        
+        self.preview = self.session.previewView
     }
     
+    // MARK: Public API's
+    
     func start() {
-        
         guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
             return self.delegate.liveStream(didAbortWithError: FBSDKLiveVideoService.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
         }
         
-        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.privacy)/live_videos", parameters: ["privacy": "self"], httpMethod: "POST")
+        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.audience!)/live_videos", parameters: ["privacy":  "{\"value\":\"\(self.privacy.rawValue)\"}"], httpMethod: "POST")
         
         DispatchQueue.main.async {
             _ = graphRequest?.start { (_, result, error) in
-                guard error == nil else {
+                guard error == nil, let dict = (result as? NSDictionary) else {
                     return self.delegate.liveStream(didAbortWithError: FBSDKLiveVideoService.errorFromDescription(description: "Error initializing the live video session: \(String(describing: error?.localizedDescription))"))
                 }
                 
-                self.id = (result as? NSDictionary)?.value(forKey: "id") as? String
-                self.session.startRtmpSession(withURL: self.sessionURL.absoluteString, andStreamKey: "/\(self.id)/")
+                self.url = URL(string:(dict.value(forKey: "stream_url") as? String)!)
+                self.id = dict.value(forKey: "id") as? String
+                
+                guard let streamPath = self.url?.lastPathComponent, let query = self.url?.query else {
+                    return self.delegate.liveStream(didAbortWithError: FBSDKLiveVideoService.errorFromDescription(description: "The stream path is invalid"))
+                }
+                
+                self.session.startRtmpSession(withURL: "rtmp://rtmp-api.facebook.com:80/rtmp/", andStreamKey: "\(streamPath)?\(query)")
                 self.delegate.liveStream(didStartWithSession:self.session)
             }
         }
@@ -111,7 +138,7 @@ open class FBSDKLiveVideoService: NSObject {
             return self.delegate.liveStream(didAbortWithError: FBSDKLiveVideoService.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
         }
 
-        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.privacy)/live_videos", parameters: ["end_live_video": true], httpMethod: "POST")
+        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.audience!)/live_videos", parameters: ["end_live_video":  true], httpMethod: "POST")
         
         DispatchQueue.main.async {
             _ = graphRequest?.start { (_, _, error) in
@@ -124,6 +151,8 @@ open class FBSDKLiveVideoService: NSObject {
         }
     }
     
+    // MARK: Utilities
+    
     internal class func errorFromDescription(description: String) -> Error {
         return NSError(domain: FBSDKErrorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey : description])
     }
@@ -132,10 +161,16 @@ open class FBSDKLiveVideoService: NSObject {
 extension FBSDKLiveVideoService : VCSessionDelegate {
     
     public func connectionStatusChanged(_ sessionState: VCSessionState) {
-        // self.delegate.liveStream!(didChangeSessionState: sessionState)
+        if (sessionState == .started) {
+            self.isStreaming = true
+        } else if (sessionState == .ended || sessionState == .error) {
+            self.isStreaming = false
+        }
+        
+        self.delegate.liveStream(didChangeSessionState: sessionState)
     }
     
     public func didAddCameraSource(_ session: VCSimpleSession!) {
-        // self.delegate.liveStream!(didAddCameraSource: session)
+        self.delegate.liveStream(didAddCameraSource: session)
     }
 }
