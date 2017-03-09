@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HKLiveStreamViewController: UIViewController {
+class HKLiveVideoViewController: UIViewController {
             
     var blurOverlay: UIVisualEffectView!
 
@@ -76,9 +76,9 @@ class HKLiveStreamViewController: UIViewController {
     }
 }
 
-extension HKLiveStreamViewController : FBSDKLiveStreamDelegate {
+extension HKLiveVideoViewController : FBSDKLiveVideoDelegate {
     
-    func liveStream(didStartWithSession session: VCSimpleSession) {
+    func liveVideo(didStartWithSession session: VCSimpleSession) {
         self.loader.stopAnimating()
         self.loader.removeFromSuperview()
         self.recordButton.isEnabled = true
@@ -86,16 +86,16 @@ extension HKLiveStreamViewController : FBSDKLiveStreamDelegate {
         self.recordButton.imageView?.image = UIImage(named: "stop-button")
     }
     
-    func liveStream(didStopWithSession session: VCSimpleSession) {
+    func liveVideo(didStopWithSession session: VCSimpleSession) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
     
-    func liveStream(didAbortWithError error: Error) {
+    func liveVideo(didAbortWithError error: Error) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
 }
 
-extension HKLiveStreamViewController : FBSDKLoginButtonDelegate {
+extension HKLiveVideoViewController : FBSDKLoginButtonDelegate {
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         self.recordButton.isHidden = true
