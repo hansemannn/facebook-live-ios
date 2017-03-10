@@ -44,7 +44,7 @@ extension ViewController: FBSDKLiveVideoDelegate {
         // Live video ended
     }
 
-    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didAbortWitherror: Error) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didAbortWith: Error) {
         // Live video aborted
     }
 }
