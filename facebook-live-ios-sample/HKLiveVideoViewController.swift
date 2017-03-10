@@ -78,7 +78,7 @@ class HKLiveVideoViewController: UIViewController {
 
 extension HKLiveVideoViewController : FBSDKLiveVideoDelegate {
     
-    func liveVideo(didStartWith session: VCSimpleSession) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didStartWith session: VCSimpleSession) {
         self.loader.stopAnimating()
         self.loader.removeFromSuperview()
         self.recordButton.isEnabled = true
@@ -86,11 +86,11 @@ extension HKLiveVideoViewController : FBSDKLiveVideoDelegate {
         self.recordButton.imageView?.image = UIImage(named: "stop-button")
     }
     
-    func liveVideo(didStopWith session: VCSimpleSession) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didStopWith session: VCSimpleSession) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
     
-    func liveVideo(didAbortWith error: Error) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didAbortWith error: Error) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
 }
