@@ -36,15 +36,15 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: FBSDKLiveVideoDelegate {
-    func liveVideo(didStartWithSession session: VCSimpleSession) {
+    func liveVideo(didStartWith session: VCSimpleSession) {
         // Live video started
     }
 
-    func liveVideo(didStopWithSession session: VCSimpleSession) {
+    func liveVideo(didStopWith session: VCSimpleSession) {
         // Live video ended
     }
 
-    func liveVideo(didAbortWithError error: Error) {
+    func liveVideo(didAbortWitherror: Error) {
         // Live video aborted
     }
 }
