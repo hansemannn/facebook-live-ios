@@ -33,6 +33,19 @@ class ViewController: UIViewController {
     @IBAction func recordButtonTapped() {
         liveVideo.start()
     }    
+
+    @IBAction func stopButtonTapped() {
+        liveVideo.stop();
+    }
+
+    @IBAction func adBreakButtonTapped() {
+        liveVideo.adBreakStartNow = true
+        liveVido.update();
+    }
+
+    @IBAction func deleteButtonTapped() {
+        liveVido.delete();
+    }
 }
 
 extension ViewController: FBSDKLiveVideoDelegate {
@@ -44,8 +57,25 @@ extension ViewController: FBSDKLiveVideoDelegate {
         // Live video ended
     }
 
-    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAbortWith: Error) {
-        // Live video aborted
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didErrorWith: Error) {
+        // Live video errored
+    }
+
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didChange sessionState: FBSDKLiveVideoSessionState) {
+        // Live video changed session state
+        // One of: .none, .previewStarted, .starting, .started, .ended, .error
+    }
+
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAdd cameraSource: FBSDKLiveVideoSession) {
+        // New camera source added to the stream
+    }
+
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didUpdate session: FBSDKLiveVideoSession) {
+        // Live video was updated through update()
+    }
+
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didDelete session: FBSDKLiveVideoSession) {
+        // Live video was deleted through delete()
     }
 }
 ```

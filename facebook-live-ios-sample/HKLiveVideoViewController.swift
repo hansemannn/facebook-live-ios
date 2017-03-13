@@ -91,11 +91,15 @@ extension HKLiveVideoViewController : FBSDKLiveVideoDelegate {
         self.recordButton.imageView?.image = UIImage(named: "stop-button")
     }
     
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didChange sessionState: FBSDKLiveVideoSessionState) {
+        print("Session state changed to: \(sessionState)")
+    }
+    
     func liveVideo(_ liveVideo: FBSDKLiveVideo, didStopWith session: FBSDKLiveVideoSession) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
     
-    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAbortWith error: Error) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didErrorWith error: Error) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
 }

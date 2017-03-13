@@ -16,12 +16,16 @@ public protocol FBSDKLiveVideoDelegate {
     func liveVideo(_ liveVideo: FBSDKLiveVideo, didStopWith session: FBSDKLiveVideoSession);
 }
 
-extension FBSDKLiveVideoDelegate {
-    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAbortWith error: Error) {}
+public extension FBSDKLiveVideoDelegate {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didErrorWith error: Error) {}
     
-    func liveVideo(_ liveVideo: FBSDKLiveVideo, didChange sessionState: VCSessionState) {}
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didChange sessionState: FBSDKLiveVideoSessionState) {}
     
-    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAdd cameraSource: VCSimpleSession) {}
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAdd cameraSource: FBSDKLiveVideoSession) {}
+
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didUpdate session: FBSDKLiveVideoSession) {}
+
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didDelete session: FBSDKLiveVideoSession) {}
 }
 
 // MARK: Enumerations
@@ -56,6 +60,20 @@ enum FBSDKLiveVideoType: StringLiteralType {
     case ambient = "AMBIENT"
 }
 
+public enum FBSDKLiveVideoSessionState : IntegerLiteralType {
+    case none = 0
+    
+    case previewStarted
+    
+    case starting
+    
+    case started
+    
+    case ended
+    
+    case error
+}
+
 struct FBSDKLiveVideoParameter {
     var key: String!
 
@@ -63,45 +81,97 @@ struct FBSDKLiveVideoParameter {
 }
 
 public class FBSDKLiveVideoSession : VCSimpleSession {
-    
+    // Subclass for more generic API-interface
 }
 
 open class FBSDKLiveVideo: NSObject {
-    var delegate: FBSDKLiveVideoDelegate!
     
-    // MARK: Live Video Parameters
+    // MARK: - Live Video Parameters
+    // MARK: Create
     
-    var privacy: FBSDKLiveVideoPrivacy! = .me {
+    var videoDescription: String! {
         didSet {
-            self.updateLiveStreamParameters(with: FBSDKLiveVideoParameter(key: "privacy", value: "{\"value\":\"\(privacy.rawValue)\"}"))
+            self.createParameters["description"] = videoDescription
+        }
+    }
+    
+    var contentTags: [String]! {
+        didSet {
+            self.createParameters["content_tags"] = contentTags
+        }
+    }
+    
+    var privacy: FBSDKLiveVideoPrivacy = .me {
+        didSet {
+            self.createParameters["privacy"] = "{\"value\":\"\(privacy.rawValue)\"}"
         }
     }
     
     var plannedStartTime: Date! {
         didSet {
-            self.updateLiveStreamParameters(with: FBSDKLiveVideoParameter(key: "planned_start_time", value: String(plannedStartTime.timeIntervalSince1970 * 1000)))
+            self.createParameters["planned_start_time"] = String(plannedStartTime.timeIntervalSince1970 * 1000)
         }
     }
     
     var status: FBSDKLiveVideoStatus! {
         didSet {
-            self.updateLiveStreamParameters(with: FBSDKLiveVideoParameter(key: "status", value: status.rawValue))
+            self.createParameters["status"] = status.rawValue
         }
     }
     
-    var type: FBSDKLiveVideoType! = .regular {
+    var type: FBSDKLiveVideoType = .regular {
         didSet {
-            self.updateLiveStreamParameters(with: FBSDKLiveVideoParameter(key: "stream_type", value: type.rawValue))
+            self.createParameters["stream_type"] = type.rawValue
         }
     }
     
     var title: String! {
         didSet {
-            self.updateLiveStreamParameters(with: FBSDKLiveVideoParameter(key: "title", value: title))
+            self.createParameters["title"] = title
         }
     }
     
-    // MARK: Utility API's
+    var videoOnDemandEnabled: String! {
+        didSet {
+            self.createParameters["save_vod"] = videoOnDemandEnabled
+        }
+    }
+    
+    // MARK: Update
+    
+    var adBreakStartNow: Bool! {
+        didSet {
+            self.updateParameters["ad_break_start_now"] = adBreakStartNow
+        }
+    }
+    
+    var adBreakTimeOffset: Float! {
+        didSet {
+            self.updateParameters["ad_break_time_offset"] = adBreakTimeOffset
+        }
+    }
+    
+    var disturbing: Bool! {
+        didSet {
+            self.updateParameters["disturbing"] = disturbing
+        }
+    }
+    
+    var embeddable: Bool! {
+        didSet {
+            self.updateParameters["embeddable"] = embeddable
+        }
+    }
+    
+    var sponsorId: String! {
+        didSet {
+            self.createParameters["sponsor_id"] = sponsorId
+        }
+    }
+    
+    // MARK: - Utility API's
+
+    var delegate: FBSDKLiveVideoDelegate!
 
     var url: URL!
 
@@ -117,12 +187,14 @@ open class FBSDKLiveVideo: NSObject {
 
     var isStreaming: Bool = false
 
-    // MARK: Internal API's
+    // MARK: - Internal API's
 
     private var session: FBSDKLiveVideoSession!
     
-    private var parameters: [String : String] = [:]
-    
+    private var createParameters: [String : Any] = [:]
+
+    private var updateParameters: [String : Any] = [:]
+
     required public init(delegate: FBSDKLiveVideoDelegate, previewSize: CGRect, videoSize: CGSize) {
         super.init()
         
@@ -145,26 +217,26 @@ open class FBSDKLiveVideo: NSObject {
         self.preview = nil
     }
     
-    // MARK: Public API's
+    // MARK: - Public API's
     
     func start() {
         guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
-            return self.delegate.liveVideo(self, didAbortWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
         }
         
-        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.audience)/live_videos", parameters: self.parameters, httpMethod: "POST")
+        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.audience)/live_videos", parameters: self.createParameters, httpMethod: "POST")
         
         DispatchQueue.main.async {
             _ = graphRequest?.start { (_, result, error) in
                 guard error == nil, let dict = (result as? NSDictionary) else {
-                    return self.delegate.liveVideo(self, didAbortWith: FBSDKLiveVideo.errorFromDescription(description: "Error initializing the live video session: \(String(describing: error?.localizedDescription))"))
+                    return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "Error initializing the live video session: \(String(describing: error?.localizedDescription))"))
                 }
                 
                 self.url = URL(string:(dict.value(forKey: "stream_url") as? String)!)
                 self.id = dict.value(forKey: "id") as? String
                 
                 guard let streamPath = self.url?.lastPathComponent, let query = self.url?.query else {
-                    return self.delegate.liveVideo(self, didAbortWith: FBSDKLiveVideo.errorFromDescription(description: "The stream path is invalid"))
+                    return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The stream path is invalid"))
                 }
                 
                 self.session.startRtmpSession(withURL: "rtmp://rtmp-api.facebook.com:80/rtmp/", andStreamKey: "\(streamPath)?\(query)")
@@ -175,7 +247,7 @@ open class FBSDKLiveVideo: NSObject {
     
     func stop() {
         guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
-            return self.delegate.liveVideo(self, didAbortWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
         }
 
         let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.audience)/live_videos", parameters: ["end_live_video":  true], httpMethod: "POST")
@@ -183,10 +255,46 @@ open class FBSDKLiveVideo: NSObject {
         DispatchQueue.main.async {
             _ = graphRequest?.start { (_, _, error) in
                 guard error == nil else {
-                    return self.delegate.liveVideo(self, didAbortWith: FBSDKLiveVideo.errorFromDescription(description: "Error stopping the live video session: \(String(describing: error?.localizedDescription))"))
+                    return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "Error stopping the live video session: \(String(describing: error?.localizedDescription))"))
                 }
                 self.session.endRtmpSession()
                 self.delegate.liveVideo(self, didStopWith:self.session)
+            }
+        }
+    }
+    
+    func update() {
+        guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+        }
+        
+        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.id)", parameters: self.createParameters, httpMethod: "POST")
+        
+        DispatchQueue.main.async {
+            _ = graphRequest?.start { (_, result, error) in
+                guard error == nil else {
+                    return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "Error initializing the live video session: \(String(describing: error?.localizedDescription))"))
+                }
+                
+                self.delegate.liveVideo(self, didUpdate: self.session)
+            }
+        }
+    }
+    
+    func delete() {
+        guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+        }
+        
+        let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.id)", parameters: ["end_live_video":  true], httpMethod: "DELEGTE")
+        
+        DispatchQueue.main.async {
+            _ = graphRequest?.start { (_, _, error) in
+                guard error == nil else {
+                    return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "Error deleting the live video session: \(String(describing: error?.localizedDescription))"))
+                }
+
+                self.delegate.liveVideo(self, didDelete: self.session)
             }
         }
     }
@@ -198,7 +306,7 @@ open class FBSDKLiveVideo: NSObject {
     }
     
     internal func updateLiveStreamParameters(with parameter: FBSDKLiveVideoParameter) {
-        self.parameters[parameter.key] = parameter.value
+        self.createParameters[parameter.key] = parameter.value
     }
 }
 
@@ -210,10 +318,10 @@ extension FBSDKLiveVideo : VCSessionDelegate {
             self.isStreaming = false
         }
         
-        self.delegate.liveVideo(self, didChange: sessionState)
+        self.delegate.liveVideo(self, didChange: FBSDKLiveVideoSessionState(rawValue: sessionState.rawValue)!)
     }
     
     public func didAddCameraSource(_ session: VCSimpleSession!) {
-        self.delegate.liveVideo(self, didAdd: session)
+        self.delegate.liveVideo(self, didAdd: session as! FBSDKLiveVideoSession)
     }
 }
