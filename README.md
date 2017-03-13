@@ -10,15 +10,15 @@ the trigger button linked in your Storyboard.
 ```swift 
 class ViewController: UIViewController {
     
-    var liveVideo: FBSDKLiveVideoService!
+    var liveVideo: FBSDKLiveVideo!
 
     override func viewDidLoad() {
         super.viewDidLoad()
       
         // Create the live video service
-        liveVideo = FBSDKLiveVideoService(
+        liveVideo = FBSDKLiveVideo(
             delegate: self,
-            frameSize: self.view.bounds,
+            previewSize: self.view.bounds,
             videoSize: CGSize(width: 1280, height: 720)
         )
         
@@ -36,15 +36,15 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: FBSDKLiveVideoDelegate {
-    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didStartWith session: VCSimpleSession) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didStartWith session: FBSDKLiveVideoSession) {
         // Live video started
     }
 
-    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didStopWith session: VCSimpleSession) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didStopWith session: FBSDKLiveVideoSession) {
         // Live video ended
     }
 
-    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didAbortWith: Error) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAbortWith: Error) {
         // Live video aborted
     }
 }
@@ -57,7 +57,7 @@ extension ViewController: FBSDKLiveVideoDelegate {
 * Run the project on your iOS device! By default, it will only start a live-stream to your private audience ("Only me")
 
 ## License
-Apache 2.0 - Try it out, modify it, use it!
+MIT - Try it out, modify it, use it!
 
 ## Author
 Hans Knöchel ([@hansemannnn](https://twitter.com/hansemannnn))

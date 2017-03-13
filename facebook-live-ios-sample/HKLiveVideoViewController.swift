@@ -18,7 +18,7 @@ class HKLiveVideoViewController: UIViewController {
     
     var loginButton: FBSDKLoginButton!
     
-    var liveVideo: FBSDKLiveVideoService!
+    var liveVideo: FBSDKLiveVideo!
     
     @IBOutlet weak var recordButton: UIButton!
     
@@ -33,7 +33,12 @@ class HKLiveVideoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.liveVideo = FBSDKLiveVideoService(delegate: self, frameSize: self.view.bounds, videoSize: CGSize(width: 1280, height: 720))
+        self.liveVideo = FBSDKLiveVideo(
+            delegate: self,
+            previewSize: self.view.bounds,
+            videoSize: CGSize(width: 1280, height: 720)
+        )
+        
         self.liveVideo.privacy = .me
         self.liveVideo.audience = "me" // or your user-id, page-id, event-id, group-id, ...
         
@@ -78,7 +83,7 @@ class HKLiveVideoViewController: UIViewController {
 
 extension HKLiveVideoViewController : FBSDKLiveVideoDelegate {
     
-    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didStartWith session: VCSimpleSession) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didStartWith session: FBSDKLiveVideoSession) {
         self.loader.stopAnimating()
         self.loader.removeFromSuperview()
         self.recordButton.isEnabled = true
@@ -86,11 +91,11 @@ extension HKLiveVideoViewController : FBSDKLiveVideoDelegate {
         self.recordButton.imageView?.image = UIImage(named: "stop-button")
     }
     
-    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didStopWith session: VCSimpleSession) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didStopWith session: FBSDKLiveVideoSession) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
     
-    func liveVideo(_ liveVideo: FBSDKLiveVideoService, didAbortWith error: Error) {
+    func liveVideo(_ liveVideo: FBSDKLiveVideo, didAbortWith error: Error) {
         self.recordButton.imageView?.image = UIImage(named: "record-button")
     }
 }
