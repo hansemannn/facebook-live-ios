@@ -89,6 +89,16 @@ open class FBSDKLiveVideo: NSObject {
     // MARK: - Live Video Parameters
     // MARK: Create
     
+    var overlay: UIView! {
+        didSet {
+            if overlay.isDescendant(of: self.preview) {
+                overlay.removeFromSuperview()
+            } else {
+                self.preview.addSubview(overlay)
+            }
+        }
+    }
+    
     var videoDescription: String! {
         didSet {
             self.createParameters["description"] = videoDescription

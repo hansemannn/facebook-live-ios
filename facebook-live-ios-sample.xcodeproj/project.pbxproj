@@ -106,11 +106,19 @@
 		DB9C40811E7055BE00CCBD83 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DBF6E1BF1E8BC1B800875443 /* FBSDKLiveVideo */,
 				DB9C406D1E70527D00CCBD83 /* AppDelegate.swift */,
 				DB9C406F1E70527D00CCBD83 /* HKLiveVideoViewController.swift */,
-				DB40E22F1E71567E009E7C74 /* FBSDKLiveVideo.swift */,
 			);
 			name = Classes;
+			sourceTree = "<group>";
+		};
+		DBF6E1BF1E8BC1B800875443 /* FBSDKLiveVideo */ = {
+			isa = PBXGroup;
+			children = (
+				DB40E22F1E71567E009E7C74 /* FBSDKLiveVideo.swift */,
+			);
+			name = FBSDKLiveVideo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

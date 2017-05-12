@@ -39,8 +39,14 @@ class HKLiveVideoViewController: UIViewController {
             videoSize: CGSize(width: 1280, height: 720)
         )
         
+        let myOverlay = UIView(frame: CGRect(x: 5, y: 5, width: self.view.bounds.size.width - 10, height: 30))
+        myOverlay.backgroundColor = UIColor(colorLiteralRed: 0.0, green: 1.0, blue: 0.0, alpha: 0.5)
+        
         self.liveVideo.privacy = .me
         self.liveVideo.audience = "me" // or your user-id, page-id, event-id, group-id, ...
+        
+        // Comment in to show a green overlay bar (configure with your own one)
+        // self.liveVideo.overlay = myOverlay
         
         initializeUserInterface()
     }
