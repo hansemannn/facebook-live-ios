@@ -61,7 +61,7 @@ class HKLiveVideoViewController: UIViewController {
         self.view.insertSubview(self.liveVideo.preview, at: 0)
 
         self.loginButton = FBSDKLoginButton()
-        self.loginButton.publishPermissions = ["publish_actions"]
+        self.loginButton.publishPermissions = ["publish_video"]
         self.loginButton.loginBehavior = .native
         self.loginButton.center = CGPoint(x: self.view.bounds.size.width / 2, y: 60)
         self.loginButton.delegate = self
