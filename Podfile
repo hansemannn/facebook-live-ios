@@ -1,3 +1,5 @@
+platform :ios, '10.2'
+
 target 'facebook-live-ios-sample' do
 	pod 'FBSDKShareKit'
 	pod 'FBSDKLoginKit'
