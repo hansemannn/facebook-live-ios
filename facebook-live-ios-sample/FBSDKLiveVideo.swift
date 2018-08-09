@@ -230,8 +230,8 @@ open class FBSDKLiveVideo: NSObject {
     // MARK: - Public API's
     
     func start() {
-        guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
-            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+        guard FBSDKAccessToken.current().hasGranted("publish_video") else {
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_video\" permission has not been granted"))
         }
         
         let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.audience)/live_videos", parameters: self.createParameters, httpMethod: "POST")
@@ -256,8 +256,8 @@ open class FBSDKLiveVideo: NSObject {
     }
     
     func stop() {
-        guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
-            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+        guard FBSDKAccessToken.current().hasGranted("publish_video") else {
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_video\" permission has not been granted"))
         }
 
         let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.audience)/live_videos", parameters: ["end_live_video":  true], httpMethod: "POST")
@@ -274,8 +274,8 @@ open class FBSDKLiveVideo: NSObject {
     }
     
     func update() {
-        guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
-            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+        guard FBSDKAccessToken.current().hasGranted("publish_video") else {
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_video\" permission has not been granted"))
         }
         
         let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.id)", parameters: self.createParameters, httpMethod: "POST")
@@ -292,8 +292,8 @@ open class FBSDKLiveVideo: NSObject {
     }
     
     func delete() {
-        guard FBSDKAccessToken.current().hasGranted("publish_actions") else {
-            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_actions\" permission has not been granted"))
+        guard FBSDKAccessToken.current().hasGranted("publish_video") else {
+            return self.delegate.liveVideo(self, didErrorWith: FBSDKLiveVideo.errorFromDescription(description: "The \"publish_video\" permission has not been granted"))
         }
         
         let graphRequest = FBSDKGraphRequest(graphPath: "/\(self.id)", parameters: ["end_live_video":  true], httpMethod: "DELEGTE")
